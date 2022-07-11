@@ -24,7 +24,7 @@ Preparação do ambiente:
 O ambiente utilizado é composto por um Raspberry PI 2B rev 1.1 com 1GB de RAM
 utilizando o Raspbian GNU/Linux 10 (buster) com os seguintes softwares:
 
--   Freechains v0.9.0
+-   Freechains v0.10.0
 
 -   Automerge 1.0.1-preview.6
 
@@ -46,7 +46,7 @@ Uso
 *Exemplo:*
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-node freechains-json.js --host=localhost:8330 (opcional) commit #p2p.json p2p.md.json --sign=003030E0D03030D (opcional) --verbose (opcional)
+node am.js --host=localhost:8330 (opcional) commit #p2p.json p2p.md.json --sign=003030E0D03030D (opcional) --verbose (opcional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -55,7 +55,7 @@ node freechains-json.js --host=localhost:8330 (opcional) commit #p2p.json p2p.md
 *Exemplo:*
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-node freechains-json.js --host=localhost:8330 (opcional) checkout #p2p.json p2p.md.json --verbose (opcional)
+node am.js --host=localhost:8330 (opcional) checkout #p2p.json p2p.md.json --verbose (opcional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Steps
