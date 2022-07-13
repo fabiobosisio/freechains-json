@@ -60,9 +60,13 @@ switch (command) {
 			    if (v) console.log("Posicao na lista: " +index)
 			    if (v) console.log("Tipo do elemento da lista: " +listelement)
 			    switch (listelement) {
-				case 'object': 
+				   case 'object': 
+				   currentDoc[n0][n1].insertAt(index, {});
+				break;
+				case 'field': 
 				   //currentDoc[n0][n1].insertAt(index, {});
-				   if (listype == 'string') currentDoc[n0][n1].insertAt(index, {[n3]:n4});
+				   //if (listype == 'string') currentDoc[n0][n1].insertAt(index, {[n3]:n4});
+				   if (listype == 'string') currentDoc[n0][n1][index] = {[n3]:n4};
 				   else if (v) console.log("todo: outros tipos (lista)");
 				break;
 				case 'item':
