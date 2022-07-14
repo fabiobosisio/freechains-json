@@ -18,18 +18,19 @@ const listype = process.argv[12]; //tipo do objeto da lista
 const n4 = process.argv[13]; // quinta variável
 
 // habilita modo verboso
-const v = true; 
+const cmd = false; // Mostra os comandos
+const out = true; // Mostra a saída
 
 // variáveis de trabalho
 let currentDoc, newDoc;
 
 
 // seleciona o comando a ser executado
-if (v) console.log("Comando: " +command);
+if (cmd) console.log("Comando: " +command);
 switch (command) {
     case 'init': // comando de inicialização
 	newDoc = Automerge.init();
-	if (v) console.log(newDoc);
+	if (out) console.log(newDoc);
     break;
   
     case 'set': // comando de manipulação
@@ -37,17 +38,17 @@ switch (command) {
 	currentDoc = Automerge.load(fs.readFileSync(filename+".atm", {encoding: null}));
     
 	// seleciona o comando a ser executado
-	if (v) console.log("Tipo do Elemento: "+ element);
+	if (cmd) console.log("Tipo do Elemento: "+ element);
 	switch (element) { 
 	   case 'object': // adiciona objetos
 		newDoc = Automerge.change(currentDoc, currentDoc => {
 		    if (!currentDoc[n0]) currentDoc[n0] = {}
 	    })
-	    if (v) console.log(newDoc); 
+	    if (out) console.log(newDoc); 
 	    break;
 	
 	    case 'field': // adiciona campos
-	    if (v) console.log("Tipo da estrutura: "+ type)
+	    if (cmd) console.log("Tipo da estrutura: "+ type)
 	    newDoc = Automerge.change(currentDoc, currentDoc => {
 		if (type == 'string') currentDoc[n0][n1] = n2;
 		//To do outros tipos abaixo
@@ -55,13 +56,14 @@ switch (command) {
 		//if (type == 'bool') currentDoc[n1] = JSON.parse(n2)
 		//if (type == 'null' || n2 == 'null') currentDoc[n1] = null
 		if (type == 'array'){
-		    if (!n2) currentDoc[n0][n1] = [] // cria uma lista vazia
+		    if (!n2) currentDoc[n0][n1] = []; // cria uma lista vazia
 		    else if (n2 == 'index'){ // alimenta a lista de acordo com o indice
-			    if (v) console.log("Posicao na lista: " +index)
-			    if (v) console.log("Tipo do elemento da lista: " +listelement)
+			    if (cmd) console.log("Posicao na lista: " +index)
+			    if (cmd) console.log("Tipo do elemento da lista: " +listelement)
 			    switch (listelement) {
-				   case 'object': 
+				case 'object': 
 				   currentDoc[n0][n1].insertAt(index, {});
+				   //currentDoc[n0][n1][index] = {};
 				break;
 				case 'field': 
 				   //currentDoc[n0][n1].insertAt(index, {});
@@ -77,7 +79,7 @@ switch (command) {
 			}
 		}
 	    })
-	    if (v) console.log(newDoc);
+	    if (out) console.log(newDoc);
 	    break;
 	}
     
@@ -91,7 +93,7 @@ switch (command) {
 	newDoc = Automerge.change(currentDoc, currentDoc => {
 		delete currentDoc[n0];
 	})
-	if (v) console.log(newDoc);
+	if (out) console.log(newDoc);
     break;
 	 
 }
