@@ -49,6 +49,7 @@ node am.js p2p init
 ### set - É o comando de manipulação do arquivo, ele possui diversas funções de manipulação, e seus usos são exemplificados abaixo.
 
 *Uso:*
+
  Uma vez criado o arquivo através do comndo init, vamos manipular ele.
  
  *Criando um objeto:*
