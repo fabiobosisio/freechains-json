@@ -1,9 +1,7 @@
-// Ferramenta de commit/checkout de arquivos JSON Automerge em cadeias Freechais
+// Ferramenta de commit/checkout de arquivos JSON Automerge em cadeias Freechains
 // Uso: 
 // node freechains-json.js --host=localhost:8330 (opcional) commit #p2p.json p2p.json --sign=003030E0D03030D (opcional) --verbose (opcional)
 // node freechains-json.js --host=localhost:8330 (opcional) checkout #p2p.json p2p.json --verbose (opcional)
-
-// node freechains-json.js --host=localhost:8330 commit #p2p.json p2p.json --sign=003030E0D03030D --verbose
 
 // ----------------------------------------- COLETA A TRATA OS ARGUMENTOS DA LINHA DE COMANDO ------------------------------------------------
 
@@ -66,6 +64,26 @@ const Automerge = require('automerge')
 
 // ----------------------------------------- FUNÇÕES ------------------------------------------------
 
+//Função para exibir o manual:
+function help () {
+
+console.log("freechains-json v0.1.0")
+console.log("")
+console.log("Automerge CRDT based JSON file upload utility for Freechains Networks")
+console.log("")
+console.log("Usage:")
+console.log("    node freechains-json.js --host=localhost:8330 (opcional) commit <chain> <file_to_upload> --sign=<pvt> (opcional) --verbose (opcional)")
+console.log("    node freechains-json.js --host=localhost:8330 (opcional) checkout <chain> <file_to_download> --verbose (opcional)")
+console.log("")
+console.log("Options:")
+console.log("    --verbose             verbose mode")
+console.log("    --host=<addr:port>    sets host address and port to connect [default: localhost:8330]")
+console.log("    --sign=<pvt>          signs post with given private key")
+console.log("")
+console.log("More Information:")
+console.log("")
+console.log("    https://github.com/fabiobosisio/freechains-json")
+}
 
 //Função para tratar os argumentos no formato do Freechains:
 function getArgs () {
@@ -292,6 +310,7 @@ switch (oper) {
 	}
         break;
     default:
-        console.log('\x1b[36m%s\x1b[0m',`Operacao invalida!`);
+        //console.log('\x1b[36m%s\x1b[0m',`Operacao invalida!`);
+	help();
         break;		
 }
