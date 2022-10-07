@@ -1,28 +1,49 @@
-Freechains-JSON - Utilitário de commit/checkout de arquivos JSON Automerge based em cadeias Freechains
-=================================================================================================
+# Freechains-JSON: Automerge CRDT based JSON file upload utility for Freechains Networks
 
-O conceito desse utilitário é a integração entre o [Automerge](https://github.com/automerge/automerge) e o [Freechains](https://github.com/Freechains/README)e obter os ganhos dessa sinergia.
+Freechains-JSON is a tool that alows to do uploads of Automerge CRDT based JSON file to Freechains Networks enabling to put into practice the concept of permissionless decentralized network-stored data structures with arbitrary data set.
 
-O [Freechains](https://github.com/Freechains/README) é um protocolo de rede de disseminação de conteúdo peer-to-peer, baseada nos modelos local-first baseado em tópicos publish-subscribe. Utiliza o sistema de disseminação não estruturada baseada em gossip, utiliza ordenação parcial de melhor esforço baseada em happened-before, possui um sistema de reputação por tópico para garantir a qualidade e a saude da rede e por fim permite diversos tipos de comunicação pública e privada (1-\> N, 1 \<-N, N \<-\> N, 1 \<-).
+Multiple users can collaboratively edit a data structure that will be shared across the network, ensuring consensus, reliability, and data delivery, and preventing abuse and haters.
 
-O [Automerge](https://github.com/automerge/automerge) funciona como um commutative replicated data type, ou CmRDT, JSON based, ou seja, ele cria uma estrutura de dados JSON armazenada em disco na forma de um arquivo de operações.
-
-
-Desenvolvimento
----------------
-
-Desenvolvi um aplicativo utilizando a liguagem  nodejs no formato de arquivo único:
-
-### freechains-json.js
-
-Essa ferramenta foi desenvolvida em nodejs para ser executada em linha de comandos linux.
+- [Commands](Docs/cmds.md): list of all protocol commands
 
 
-Preparação do ambiente:
------------------------
+## Install
 
-O ambiente utilizado é composto por um Raspberry PI 2B rev 1.1 com 1GB de RAM
-utilizando o Raspbian GNU/Linux 10 (buster) com os seguintes softwares:
+First, you need to install `java` and `libsodium` (Freechains dependencies):
+
+```
+$ sudo apt install default-jre libsodium23
+```
+
+Then, you are ready to install `freechains`:
+
+```
+$ wget https://github.com/Freechains/README/releases/download/v0.10.0/install-v0.10.0.sh
+
+# choose one:
+$ sh install-v0.10.0.sh .                    # either unzip to current directory (must be in the PATH)
+$ sudo sh install-v0.10.0.sh /usr/local/bin  # or     unzip to system  directory
+```
+
+And now, you need to install `automerge` and `nodejs`:
+
+```
+$ sudo apt install nodejs
+
+```
+```
+$ npm install automerge ## or yarn add automerge
+```
+
+For the collaborative proposal to work, it is necessary to make a small adjustment in Automerge so that it allows forks from previous versions of the file. natively it does not allow comparisons of versions created from a single point fork.
+
+Copy the modified new.js file contained in the [Mods directory of this repository](Mods/) to the following directory at your installation location:
+
+```
+/home/pi/node_modules/automerge/backend
+```
+
+The versions used in the tests were:
 
 -   Freechains v0.10.0
 
@@ -30,71 +51,86 @@ utilizando o Raspbian GNU/Linux 10 (buster) com os seguintes softwares:
 
 -   NodeJS v14.15.4
 
-Para que a proposta colaborativa funcione, é necessário um pequeno ajuste no Automerge para que ele permita forks a partir de versões anteriores do arquivo. nativamente ele não permite comparações de versões criadas a partir de um fork de um único ponto.
+## Basics
 
-Copie o arquivo modificado new.js contido no diretorio Automerge desse repositório para o seguinte diretório no seu local de instalação: 
+The basic use of Freechains-json is very straightforward:
 
-### /home/pi/node_modules/automerge/backend
+- `node freechains-json.js --host=localhost:8330 (opcional) commit <chain> <file_to_upload> --sign=<pvt> (opcional) --verbose (opcional)`:     Commit - Publish the difference between the local file and the most current content on the network. The publication is done in binary to save space on the network.
+- `node freechains-json.js --host=localhost:8330 (opcional) checkout <chain> <file_to_download> --verbose (opcional)")`:           Checkout - 
+Download the content from the network and recompose the file with the latest content.
 
+Follows a step-by-step execution:
 
+- Start a Freechains host:
 
-Uso
----
+```
+$ freechains-host start /home/pi/servers/distsys
+```
 
-### Commit
+- Switch to another terminal.
 
-*Exemplo:*
+- Create an identity:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-node freechains-json.js --host=localhost:8330 (opcional) commit #p2p.json p2p.md.json --sign=003030E0D03030D (opcional) --verbose (opcional)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+$ freechains crypto pubpvt "secret password" # creates two keys, public and private
+96700ACD1128035FFEF5DC264DF87D5FEE45FF15E2A880708AE40675C9AD039E
+```
 
+- Create and Join the public forum `#p2pforum`:
 
-### Checkout
+```
+$ freechains chains join â€™#p2pforumâ€™ â€™96700ACD1...â€™  # type the full shared key above
+C40DBB...
+```
 
-*Exemplo:*
+- Use the AM editor to create and edit an automerge file (i.e p2p.json/p2p.am)
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-node freechains-json.js --host=localhost:8330 (opcional) checkout #p2p.json p2p.md.json --verbose (opcional)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- Post an Automerge JSON based share file (i.e p2p.json/p2p.am):
 
-Steps
------
+```
+$ freechains-json --host=serverhost:8330 commit #p2pforum p2p --sign=003030E0D03030D...
+```
 
-O diretório Steps possui as ferramentas para gerar cada um dos passos da simulação do capitulo 4.1 do artigo Peer-to-Peer Consensus via Authoring Reputation.
+- Communicate with other peers:
+   - Start another `freechains` host.
+   - Join the same private chain `#p2pforum`.
+   - Synchronize with the first host.
 
-*Exemplo de Uso: node step1.js* 
+```
+$ freechains-host --port=8331 start /home/pi/servers/distsys
+# switch to another terminal
+$ freechains --host=localhost:8331 chains join '#p2pforum' 96700A... # type same key
+C40DBB...
+$ freechains --host=localhost:8330 peer localhost:8331 send '#p2pforum'
+```
 
-Utilize após a execução de cada step o freechains-json para comitar o arquivo p2p.md.json ou p2p.md.automerge atualizado a cada execução dos steps.
+The last command sends all new posts from `8330` to `8331`.
 
+- Create an identity:
 
-Test Files
-----------
+```
+$ freechains crypto pubpvt "secret password" # creates two keys, public and private
+003030E0D03030DEF5DC264DF87D5FEE45FF15E2A880708AE40675C9AD039E
+```
 
-O diretório Teste Files possui arquivos de teste para validação do sistema. Os arquivos file3.automerge e file3.5.automerge são forks do arquivo file2.automerge.
+- Checking out of the actual content of the public forum
 
+```
+freechains-json --host=serverhost:8330 commit checkout #p2pforum p2p
+```
 
-Test Files Gen
---------------
+- Use the AM editor to edit the automerge file resulting of checkout (in our example, p2p/json/p2p.am), changing/including/deleting something.
 
-O diretório Teste Files gen possui as ferramentas para gerar cada um dos arquivos contidos no diretório Test File, sendo que o passo 1 (que gera o primeiro arquivo: file.automerge, possui versões para gerar esse arquivo com diversos tamanhos - isso será utilizado em avaliações posteriores)
+- Post the Automerge JSON based share file (i.e p2p.json/p2p.am):
 
-*Exemplo de Uso: node passo1.js* 
+```
+$ freechains-json --host=serverhost:8331 commit #p2pforum p2p --sign=003030E0D03030D...
+```
 
-Tool Box
---------
+- Sends and receives all new posts from `8331` to `8330`.
 
-O diretório Tool Box possui algumas ferramentas que desenvolvi para apoiar os testes e evolução do freechains-json:
-
--   limpa.sh: Apaga os arquivos *.json *.automerge *.network *.diff contidos no diretório.
-
-	*Uso: ./limpa.sh* 
-
--   compara.js: Exibe simultaneamente dois arquivos *.automerge convertidos para JSON para fins de comparação.
-
-	*Uso: node compara.js nomedoarquivo1.automerge nomedoarquivo2.automerge* 
-
--   automergetojson.js: Como o próprio nome já diz, converte arquivos *.automerge para *.json.
-
-	*Uso: node automergetojson.js nomedoarquivo.automerge* 
+```
+$ freechains --host=localhost:8331 peer localhost:8330 send '#p2pforum'
+$ freechains --host=localhost:8331 peer localhost:8330 recv '#p2pforum'
+```
 
