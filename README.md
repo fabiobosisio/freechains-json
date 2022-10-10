@@ -43,6 +43,14 @@ Copy the modified new.js file contained in the [Mods directory of this repositor
 /home/pi/node_modules/automerge/backend
 ```
 
+And finally, clone the `freechains-json repository` to use the tool:
+
+```
+$ git clone https://github.com/fabiobosisio/freechains-json.git
+
+```
+
+
 The versions used in the tests were:
 
 -   Freechains v0.10.0
