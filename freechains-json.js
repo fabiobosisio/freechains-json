@@ -20,7 +20,7 @@ let file; // O nome do arquivo a ser recebido
 if (args.commit){ 
 	oper = "commit";
 	if(args.commit.split('.').pop()=="json"){ // verifica se o arquivo para postar possui a extensão json
-		file = args.commit.split('.').slice(0, -1).join('.')+".atm"; // recebe o nome do arquivo a ser postado ajustando a extensão para automerge
+		file = args.commit.split('.').slice(0, -1).join('.')+".am"; // recebe o nome do arquivo a ser postado ajustando a extensão para automerge
 
 	}else{
 		if(args.commit.split('.').pop()=="automerge"){ // verifica se o arquivo para postar possui a extensão automerge
@@ -140,7 +140,7 @@ function postfile(filename) {
 	if(args.verbose){console.log('\x1b[36m%s\x1b[0m',`\nPostado! ${chksum}`);}
 	
 	try{
-		fs.unlinkSync('changes.atm');
+		fs.unlinkSync('changes.am');
 		
 	} catch(err) {}	
 	return chksum;
@@ -203,10 +203,10 @@ function receivefile() {
 				console.log("\n",content);
 				*/
 											
-				execSync("freechains --host="+host+" chain '"+chain+"' get payload "+chainvector[i]+" file 'temp.atm'")
+				execSync("freechains --host="+host+" chain '"+chain+"' get payload "+chainvector[i]+" file 'temp.am'")
 				var fsopen = require('fs');
-				var content = Automerge.load(fsopen.readFileSync('temp.atm'));
-				fsopen.unlink('temp.atm', function (err) { 
+				var content = Automerge.load(fsopen.readFileSync('temp.am'));
+				fsopen.unlink('temp.am', function (err) { 
 					if (err) throw err; 
 				});
 								
@@ -253,7 +253,7 @@ switch (oper) {
         let netfile = receivefile();
        
        	// Tenta ler o arquivo automerge do json informado 
-	let localfile = Automerge.load(readfile(""+file.split('.').slice(0, -1).join('.')+".atm","\nAchou o arquivo "+file.split('.').slice(0, -1).join('.')+".atm"));       
+	let localfile = Automerge.load(readfile(""+file.split('.').slice(0, -1).join('.')+".am","\nAchou o arquivo "+file.split('.').slice(0, -1).join('.')+".am"));       
 		
 	// se o arquivo local não existir
 	if (localfile == null ){
@@ -264,7 +264,7 @@ switch (oper) {
 		// se for genesis da cadeia
 		if (netfile == "genesis"){
 
-			let post = postfile(file.split('.').slice(0, -1).join('.')+".atm");
+			let post = postfile(file.split('.').slice(0, -1).join('.')+".am");
 			console.log('\x1b[36m%s\x1b[0m',`\nChecksum da postagem na cadeia:`, '\x1b[37m', `\n${post}`);		
 		}
 		
@@ -284,10 +284,10 @@ switch (oper) {
 					console.log('\x1b[1m\x1b[31m%s',`\nO arquivo ja esta presente na cadeia!`,'\x1b[0m\n');
 				}else{
 					// Salva a diferença que será enviado pela rede em um arquivo local: changes.temp
-					savefile("changes.atm", JSON.stringify(filediff),"\nO arquivo changes.temp foi salvo!", "overw" );
+					savefile("changes.am", JSON.stringify(filediff),"\nO arquivo changes.temp foi salvo!", "overw" );
 
 					// Posta o arquivo changes.temp na cadeia do freechains e o apaga em seguida
-					let post = postfile("changes.atm");
+					let post = postfile("changes.am");
 					console.log('\x1b[36m%s\x1b[0m',`\nChecksum da postagem na cadeia:`, '\x1b[37m', `\n${post}`);				
 				}
 			}
@@ -303,7 +303,7 @@ switch (oper) {
 	if (node != "genesis"){
 			
         	// Salva o arquivo local automerge com os metadados automerge do json
-		savefile(file.split('.').slice(0, -1).join('.')+".atm", Automerge.save(node),"\nO arquivo "+file.split('.').slice(0, -1).join('.')+".atm foi salvo!", "overw");
+		savefile(file.split('.').slice(0, -1).join('.')+".am", Automerge.save(node),"\nO arquivo "+file.split('.').slice(0, -1).join('.')+".am foi salvo!", "overw");
 		
 		// Salva o arquivo local .json
 		savefile(file.split('.').slice(0, -1).join('.')+".json", JSON.stringify(node),"\nO arquivo "+file.split('.').slice(0, -1).join('.')+".json foi salvo!", "overw");      
