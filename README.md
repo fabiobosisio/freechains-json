@@ -72,7 +72,7 @@ Follows a step-by-step execution:
 - Start a Freechains host:
 
 ```
-freechains-host start /home/pi/servers/distsys
+freechains-host start /home/user/servers/distsys
 ```
 
 - Switch to another terminal.
@@ -87,16 +87,16 @@ freechains keys shared "secret password" # returns shared key
 - Create and Join the public forum `#p2pforum`:
 
 ```
-freechains chains join ’#p2pforum’ ’96700ACD1...’  # type the full shared key above
+freechains chains join '#p2pforum' '96700ACD1...'  # type the full shared key above
 C40DBB...
 ```
 
-- Use the AM editor to create and edit an automerge file (i.e p2p.json/p2p.am)
+- Use the AMRW to create and edit an automerge file (i.e p2p.am/p2p.json)
 
-- Post an Automerge JSON based share file (i.e p2p.json/p2p.am) signed with private key (optional)
+- Post an Automerge JSON based share file (i.e p2p.am/p2p.json) signed with private key (optional)
 
 ```
-node freechains-json.js --host=localhost:8330 commit '#p2pforum' p2p.json --sign=003030E0D03030D... 
+node freechains-json.js --host=localhost:8330 commit '#p2pforum' p2p.am --sign=003030E0D03030D... 
 ```
 
 - Communicate with other peers:
@@ -105,7 +105,7 @@ node freechains-json.js --host=localhost:8330 commit '#p2pforum' p2p.json --sign
    - Synchronize with the first host.
 
 ```
-freechains-host start /home/fbosisio/servers/distsys2 --port=8331
+freechains-host start /home/user/servers/distsys2 --port=8331
 # switch to another terminal
 freechains --host=localhost:8331 chains join '#p2pforum' 96700A... # type same key
 C40DBB...
@@ -124,21 +124,20 @@ freechains --host=localhost:8331 keys pubpvt "secret password" # creates two key
 - Checking out of the actual content of the public forum
 
 ```
-node freechains-json.js --host=localhost:8331 checkout '#p2pforum' p2p.json
+node freechains-json.js --host=localhost:8331 checkout '#p2pforum' p2p.am
 ```
 
-- Use the AM editor to edit the automerge file resulting of checkout (in our example, p2p.json/p2p.am), changing/including/deleting something.
+- Use the AMRW to edit the automerge file resulting of checkout (in our example, p2p.am/p2p.json), changing/including/deleting something.
 
-- Post the Automerge JSON based share file (i.e p2p.json/p2p.am):
+- Post the Automerge JSON based share file (i.e p2p.am/p2p.json):
 
 ```
-node freechains-json.js --host=localhost:8331 commit '#p2pforum' p2p.json --sign=003030E0D03030D...
+node freechains-json.js --host=localhost:8331 commit '#p2pforum' p2p.am --sign=003030E0D03030D...
 ```
 
 - Sends and receives all new posts from `8331` to `8330`.
 
 ```
 freechains --host=localhost:8331 peer localhost:8330 send '#p2pforum'
-freechains --host=localhost:8331 peer localhost:8330 recv '#p2pforum'
 ```
 
