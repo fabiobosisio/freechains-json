@@ -19,17 +19,16 @@ let oper; // A operação a ser feita
 let file; // O nome do arquivo a ser recebido
 if (args.commit){ 
 	oper = "commit";
-	if(args.commit.split('.').pop()=="json"){ // verifica se o arquivo para postar possui a extensão json
-		file = args.commit.split('.').slice(0, -1).join('.')+".am"; // recebe o nome do arquivo a ser postado ajustando a extensão para automerge
-
-	}else{
-		if(args.commit.split('.').pop()=="automerge"){ // verifica se o arquivo para postar possui a extensão automerge
+//	if(args.commit.split('.').pop()=="json"){ // verifica se o arquivo para postar possui a extensão json
+//		file = args.commit.split('.').slice(0, -1).join('.')+".am"; // recebe o nome do arquivo a ser postado ajustando a extensão para automerge
+//	}else{
+		if(args.commit.split('.').pop()=="am"){ // verifica se o arquivo para postar possui a extensão automerge
 			file = args.commit;// recebe o nome do arquivo a ser postado
 		}else{
-			console.log('\x1b[1m\x1b[31m%s',`\nUtilize arquivos JSON/AUTOMERGE\n`,'\x1b[0m'); 
+			console.log('\x1b[1m\x1b[31m%s',`\nUtilize arquivos JSON Automerge (.am)\n`,'\x1b[0m'); 
 			return;
 		}
-	}
+//	}
 }else if (args.checkout){
 	oper = "checkout";
 	file = args.checkout; // recebe o nome do arquivo a ser recebido
